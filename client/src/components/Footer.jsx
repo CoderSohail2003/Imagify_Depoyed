@@ -6,7 +6,7 @@ const Footer = () => {
     <div className='flex items-center justify-between gap-4 py-3 mt-20'>
       <img src={assets.logo} alt="" width={150}/>
       <p className='flex-1 border-l border-gray-400 pl-4 text-md text-gray-500 max-sm:hidden'>
-        Copyright @SIESCOMS   |   All right reserved.</p>
+        Copyright @WB-UNITY   |   All right reserved.</p>
       <div className="flex gap-2.5">
         <img src={assets.facebook_icon} alt="" width={35}/>
         <img src={assets.instagram_icon} alt="" width={35}/>

@@ -34,7 +34,7 @@ const Header = () => {
       <h1 className='text-4xl max-w-75 sm:text-7xl sm:max-w-147.5 mx-auto mt-10 text-center'>
         Turn text to <span className='text-blue-600'>image</span>, in seconds.</h1>
 
-      <p className='text-center max-w-xl mx-auto mt-5 font-semibold'>Unleash your creativity with AI. Turn your imagination into visual art in seconds - 
+      <p className='text-center max-w-xl mx-auto mt-5 font-semibold'>Unleash your creativity with AI. Turn your imagination into 1080P QHD visual art in seconds - 
         just type, and watch the magic happen.</p>
         <button className='sm:text-lg text-white bg-black w-auto mt-8 px-12 py-2.5 flex items-center 
         gap-2 rounded-full'
