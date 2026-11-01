@@ -1,58 +1,40 @@
 # Vercel deployment
 
-Deploy this repository as **two Vercel projects**. The frontend is a static Vite
-site, while the backend is an Express application that Vercel runs as a
-serverless function. Both projects can be connected to the same Git repository.
+Deploy this repository as **one Vercel multi-service project**. The root
+[`vercel.json`](./vercel.json) declares the Vite frontend and Express backend as
+services. Requests under `/api/` are routed to Express; all other paths go to
+the frontend, including client-side routes such as `/result` and `/buy`.
 
-## Frontend project
+## Vercel project settings
 
-Create a Vercel project for this repository with these settings:
+Import the repository as a single project and use:
 
-- **Root Directory:** `client`
-- **Framework Preset:** Vite
-- **Install Command:** `npm ci`
-- **Build Command:** `npm run build`
-- **Output Directory:** `dist`
+- **Root Directory:** repository root (`.`); do not set it to `client` or
+  `server`
+- **Framework Preset:** Other / multi-service, with service frameworks read
+  from the root `vercel.json` (`vite` for `client`, `express` for `server`)
+- **Install and build settings:** use the service defaults/configuration; the
+  client uses `npm ci`, `npm run build`, and `dist`, while Express has no
+  separate compile step
 
-These settings are also recorded in `client/vercel.json`. Its rewrite sends
-client-side routes such as `/result` and `/buy` to the React entry page.
+Do not create separate frontend and backend Vercel projects for this layout.
+The frontend calls relative `/api/...` URLs, so the root service rewrites route
+those requests to the backend without a public backend URL or CORS setup.
 
-Add this environment variable to the frontend project's Production and Preview
-environments:
+## Environment variables
 
-- `VITE_BACKEND_URL`: the backend project's HTTPS origin, with no trailing
-  slash (for example, `https://your-api.vercel.app`). This value is public in
-  the built frontend; do not put credentials or API keys in it.
-
-## Backend project
-
-Create a second Vercel project for the same repository:
-
-- **Root Directory:** `server`
-- **Framework Preset:** Express
-- **Install Command:** `npm ci`
-- **Build Command:** leave at the Express preset default (there is no compile
-  step)
-- **Output Directory:** none; Vercel runs the exported Express app as a
-  serverless function.
-
-`server/index.js` exports the Express app for Vercel. The app handles the
-existing `/api/user/...` and `/api/image/...` routes directly. The local
-`npm run server` command remains available and starts a regular HTTP listener.
-
-Add these environment variables to the backend project's Production and
-Preview environments. Keep them server-side; do not add them to the frontend
-project or use a `VITE_` prefix:
+Add these variables to the Vercel project's Production and Preview environments.
+Keep them as server-side variables; do not prefix secrets with `VITE_`:
 
 - `MONGODB_URI`: MongoDB connection URI. The server selects the `imagify`
   database separately, so a database path in this URI is not required.
 - `JWT_SECRET`: a strong, private signing secret.
 - `CLIPDROP_API`: the Clipdrop API key used for image generation.
 
-After deploying the backend, copy its HTTPS origin into the frontend's
-`VITE_BACKEND_URL`, then redeploy the frontend because Vite embeds that value at
-build time. Ensure the MongoDB Atlas network access rules allow connections
-from the deployment environment.
+The app also supports an optional public `VITE_BACKEND_URL` override, but leave
+it unset for the multi-service setup because requests should use same-origin
+`/api` paths. Ensure MongoDB Atlas network access permits connections from the
+deployment environment.
 
 ## Local development and checks
 
